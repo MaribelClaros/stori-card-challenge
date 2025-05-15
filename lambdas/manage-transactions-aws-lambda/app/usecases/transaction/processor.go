@@ -1,5 +1,3 @@
-armame un processTransactionTest.go en base a este código, usando ginko y gin gonic:
-
 package transaction
 
 import (
@@ -10,8 +8,7 @@ import (
 	"log"
 	topic "stori-card-challenge/lambdas/manage-transactions-aws-lambda/domain/sns"
 	"stori-card-challenge/lambdas/manage-transactions-aws-lambda/domain/transaction"
-	"stori-card-challenge/lambdas/manage-transactions-aws-lambda/internal/infraestructure/dynamodb"
-	"stori-card-challenge/lambdas/manage-transactions-aws-lambda/internal/infraestructure/sns"
+	"stori-card-challenge/lambdas/manage-transactions-aws-lambda/internal/ports"
 	"strconv"
 	"time"
 
@@ -20,14 +17,26 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3"
 )
 
-// TransactionsProcessor is the use case struct
-type TransactionsProcessor struct {
-	repo     dynamodb.TransactionRepository
-	notifier sns.Notifier
-	s3Client *s3.S3
+type Processor interface {
+	ProcessCSVRecords(ctx context.Context, bucket, key string) error
 }
 
-func NewTransactionsProcessor(transactionRepo dynamodb.TransactionRepository, snsNotifier sns.Notifier) *TransactionsProcessor {
+// TransactionsProcessor is the use case struct
+type TransactionsProcessor struct {
+	repo     ports.TransactionRepository
+	notifier ports.Notifier
+	s3Client ports.S3Client
+}
+
+func NewTransactionsProcessorWithS3(transactionRepo ports.TransactionRepository, snsNotifier ports.Notifier, s3Client ports.S3Client) *TransactionsProcessor {
+	return &TransactionsProcessor{
+		repo:     transactionRepo,
+		notifier: snsNotifier,
+		s3Client: s3Client,
+	}
+}
+
+func NewTransactionsProcessor(transactionRepo ports.TransactionRepository, snsNotifier ports.Notifier) *TransactionsProcessor {
 	sess := session.Must(session.NewSession())
 	s3Client := s3.New(sess)
 
@@ -60,7 +69,7 @@ func (p *TransactionsProcessor) ProcessCSVRecords(ctx context.Context, bucket, k
 	txs, err := validateAndProcessCSVRecords(records)
 
 	if err != nil {
-		return fmt.Errorf("error processing CSV in file %s", key)
+		return fmt.Errorf("error processing CSV in file: %s", err)
 	}
 
 	// Save to DynamoDB
@@ -69,8 +78,24 @@ func (p *TransactionsProcessor) ProcessCSVRecords(ctx context.Context, bucket, k
 		return fmt.Errorf("error saving transactions: %w", err)
 	}
 
+	// Generate financial summary
+	balance, monthlyReports := CalculateReport(txs)
+
+	// Prepare SNS message
+	var summaries []topic.MonthlySummary
+	for _, report := range monthlyReports {
+		summaries = append(summaries, topic.MonthlySummary{
+			Month:            report.Month.String(),
+			TransactionCount: report.TransactionCount,
+			AverageDebit:     report.AverageDebit,
+			AverageCredit:    report.AverageCredit,
+		})
+	}
+
 	topicMessage := topic.TopicMessage{
 		Transactions: txs,
+		Balance:      balance,
+		Monthly:      summaries,
 	}
 
 	err = p.notifier.Execute(ctx, topicMessage)
@@ -101,13 +126,13 @@ func validateAndProcessCSVRecords(records [][]string) ([]transaction.Transaction
 			return nil, errors.New("invalid ID format")
 		}
 
-		_, err = time.Parse("01/02", record[1])
+		parseDate, err := time.Parse("01/02", record[1])
 
 		if err != nil {
 			return nil, errors.New("invalid Date format")
 
 		}
-		date := record[1]
+		date := parseDate
 
 		amount, err := strconv.ParseFloat(record[2], 64)
 		if err != nil {

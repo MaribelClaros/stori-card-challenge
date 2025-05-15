@@ -1,4 +1,4 @@
-package sns
+package adapters
 
 import (
 	"context"
@@ -7,15 +7,12 @@ import (
 	"log"
 	"os"
 	domain "stori-card-challenge/lambdas/manage-transactions-aws-lambda/domain/sns"
+	"stori-card-challenge/lambdas/manage-transactions-aws-lambda/internal/ports"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/sns"
 )
-
-type Notifier interface {
-	Execute(ctx context.Context, message domain.TopicMessage) error
-}
 
 type snsTransactions struct {
 	client   *sns.SNS
@@ -23,7 +20,7 @@ type snsTransactions struct {
 }
 
 // NewSnsTransactions creates a new SNS notifier with default AWS session
-func NewSnsTransactions() Notifier {
+func NewSnsTransactions() ports.Notifier {
 	sess := session.Must(session.NewSession())
 	snsClient := sns.New(sess)
 

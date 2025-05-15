@@ -1,20 +1,17 @@
-package dynamodb
+package adapters
 
 import (
 	"context"
 	"fmt"
 	"os"
 	"stori-card-challenge/lambdas/manage-transactions-aws-lambda/domain/transaction"
+	"stori-card-challenge/lambdas/manage-transactions-aws-lambda/internal/ports"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 )
-
-type TransactionRepository interface {
-	SaveTransactions(ctx context.Context, txs []transaction.Transaction) error
-}
 
 // repository implements ports.Repository
 type transactionRepository struct {
@@ -23,7 +20,7 @@ type transactionRepository struct {
 }
 
 // NewTransactionRepository creates a new DynamoDB repository
-func NewTransactionRepository() TransactionRepository {
+func NewTransactionRepository() ports.TransactionRepository {
 	sess := session.Must(session.NewSession())
 	client := dynamodb.New(sess)
 
