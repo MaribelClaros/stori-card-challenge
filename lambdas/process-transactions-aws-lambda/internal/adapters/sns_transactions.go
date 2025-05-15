@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"log"
 	"os"
-	domain "stori-card-challenge/lambdas/manage-transactions-aws-lambda/domain/sns"
-	"stori-card-challenge/lambdas/manage-transactions-aws-lambda/internal/ports"
+	domain "stori-card-challenge/lambdas/process-transactions-aws-lambda/domain/sns"
+	"stori-card-challenge/lambdas/process-transactions-aws-lambda/internal/ports"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"

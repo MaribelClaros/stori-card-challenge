@@ -3,12 +3,12 @@ package transaction
 import (
 	"context"
 	"io"
-	"stori-card-challenge/lambdas/manage-transactions-aws-lambda/domain/sns"
+	"stori-card-challenge/lambdas/process-transactions-aws-lambda/domain/sns"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/request"
 	"github.com/aws/aws-sdk-go/service/s3"
-	"stori-card-challenge/lambdas/manage-transactions-aws-lambda/domain/transaction"
+	"stori-card-challenge/lambdas/process-transactions-aws-lambda/domain/transaction"
 )
 
 // ---------------- TransactionRepository ----------------

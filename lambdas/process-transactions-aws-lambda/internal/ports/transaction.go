@@ -2,7 +2,7 @@ package ports
 
 import (
 	"context"
-	"stori-card-challenge/lambdas/manage-transactions-aws-lambda/domain/transaction"
+	"stori-card-challenge/lambdas/process-transactions-aws-lambda/domain/transaction"
 )
 
 type TransactionRepository interface {

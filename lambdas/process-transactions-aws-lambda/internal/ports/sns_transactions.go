@@ -2,7 +2,7 @@ package ports
 
 import (
 	"context"
-	domain "stori-card-challenge/lambdas/manage-transactions-aws-lambda/domain/sns"
+	domain "stori-card-challenge/lambdas/process-transactions-aws-lambda/domain/sns"
 )
 
 type Notifier interface {

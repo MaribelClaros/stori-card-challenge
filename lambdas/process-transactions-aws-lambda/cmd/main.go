@@ -5,8 +5,8 @@ import (
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	"log"
-	"stori-card-challenge/lambdas/manage-transactions-aws-lambda/app/usecases/transaction"
-	"stori-card-challenge/lambdas/manage-transactions-aws-lambda/internal/adapters"
+	"stori-card-challenge/lambdas/process-transactions-aws-lambda/app/usecases/transaction"
+	"stori-card-challenge/lambdas/process-transactions-aws-lambda/internal/adapters"
 )
 
 type App struct {

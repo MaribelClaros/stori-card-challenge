@@ -6,9 +6,9 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	topic "stori-card-challenge/lambdas/manage-transactions-aws-lambda/domain/sns"
-	"stori-card-challenge/lambdas/manage-transactions-aws-lambda/domain/transaction"
-	"stori-card-challenge/lambdas/manage-transactions-aws-lambda/internal/ports"
+	topic "stori-card-challenge/lambdas/process-transactions-aws-lambda/domain/sns"
+	"stori-card-challenge/lambdas/process-transactions-aws-lambda/domain/transaction"
+	"stori-card-challenge/lambdas/process-transactions-aws-lambda/internal/ports"
 	"strconv"
 	"time"
 
