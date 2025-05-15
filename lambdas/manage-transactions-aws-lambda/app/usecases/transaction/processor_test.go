@@ -63,7 +63,7 @@ var _ = Describe("TransactionsProcessor", func() {
 		Expect(err).To(BeNil())
 	})
 
-	FIt("should return error if CSV is invalid", func() {
+	It("should return error if CSV is invalid", func() {
 		file, err := os.Open("testdata/mock_invalid_data.csv")
 		Expect(err).To(BeNil())
 		defer file.Close()

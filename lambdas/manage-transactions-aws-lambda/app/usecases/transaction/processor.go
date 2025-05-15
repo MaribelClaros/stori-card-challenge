@@ -85,7 +85,7 @@ func (p *TransactionsProcessor) ProcessCSVRecords(ctx context.Context, bucket, k
 	var summaries []topic.MonthlySummary
 	for _, report := range monthlyReports {
 		summaries = append(summaries, topic.MonthlySummary{
-			Month:            report.Month.String(),
+			Month:            report.Month,
 			TransactionCount: report.TransactionCount,
 			AverageDebit:     report.AverageDebit,
 			AverageCredit:    report.AverageCredit,

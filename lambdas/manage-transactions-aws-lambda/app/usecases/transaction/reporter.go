@@ -3,20 +3,14 @@ package transaction
 import (
 	"math"
 	"sort"
+	"stori-card-challenge/lambdas/manage-transactions-aws-lambda/domain/sns"
 	"stori-card-challenge/lambdas/manage-transactions-aws-lambda/domain/transaction"
 	"time"
 )
 
-type MonthlyReport struct {
-	Month            time.Month // Calendar month (e.g., time.March)
-	TransactionCount int        // Total number of transactions in the month
-	AverageDebit     float64    // Average amount of debit transactions (negative values)
-	AverageCredit    float64    // Average amount of credit transactions (positive values)
-}
-
-func CalculateReport(txs []transaction.Transaction) (float64, []MonthlyReport) {
+func CalculateReport(txs []transaction.Transaction) (float64, []sns.MonthlySummary) {
 	var balance float64
-	monthly := make(map[time.Month]*MonthlyReport)
+	monthly := make(map[time.Month]*sns.MonthlySummary)
 	debitCount := make(map[time.Month]int)
 	creditCount := make(map[time.Month]int)
 
@@ -26,7 +20,7 @@ func CalculateReport(txs []transaction.Transaction) (float64, []MonthlyReport) {
 		month := tx.Date.Month()
 
 		if monthly[month] == nil {
-			monthly[month] = &MonthlyReport{Month: month}
+			monthly[month] = &sns.MonthlySummary{Month: month}
 		}
 
 		monthly[month].TransactionCount++
@@ -50,7 +44,7 @@ func CalculateReport(txs []transaction.Transaction) (float64, []MonthlyReport) {
 	}
 
 	// Convert map to sorted slice
-	var reports []MonthlyReport
+	var reports []sns.MonthlySummary
 	for _, report := range monthly {
 		reports = append(reports, *report)
 	}
