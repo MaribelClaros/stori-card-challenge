@@ -18,7 +18,7 @@ To run this project, follow these steps:
    Create an S3 bucket named `transactions-bucket-stori-card`.  
    Upload a `.csv` file with transactions.
    > An example CSV file can be found in:  
-   > `process-transactions-aws-lambda/resources/sample.csv`
+   > `process-transactions-aws-lambda/resources/transactions.csv`
 
 3. **ECR Repositories**  
    Create two Elastic Container Registry (ECR) repositories for your Lambda Docker images:
