@@ -4,6 +4,8 @@ This challenge consists of building a solution for processing transaction data f
 
 ## Architecture
 
+![Architecture](process-transactions-aws-lambda/resources/img/architecture.png)
+
 
 ## Installation
 
