@@ -6,7 +6,7 @@ This Lambda function is responsible for processing transactions, sending emails,
 
 1. **Push Docker image**
 
-Build the Docker image for the Lambda (using Linux ARM64 platform):
+Build the Docker image for the Lambda (using Linux AMD4 platform):
 
 ```bash
 
