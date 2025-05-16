@@ -51,3 +51,5 @@ To run this project, follow these steps:
     - SES email sending
     - DynamoDB read/write
     - SNS publish/subscribe
+    - I'm using us-east-1 region
+    - The format Date in .csv must be MM/DD
