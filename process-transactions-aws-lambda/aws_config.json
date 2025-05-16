@@ -2,5 +2,5 @@
     "aws_region": "us-east-1",
     "s3_bucket": "transactions-bucket-stori-card",
     "object_key": "transactions.csv",
-    "topic_arn": "arn:aws:sns:us-east-1:128624920373:SendNotificationTopic"
+    "topic_arn": "arn:aws:sns:us-east-1:128624920373:AccountInformationTopic"
 }
